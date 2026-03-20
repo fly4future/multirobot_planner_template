@@ -134,7 +134,9 @@ Each `Waypoint` in a path has: `latitude`, `longitude`, `altitude`, `heading`.
 
 ## GPS Utilities
 
-The `geo_utils.h` header provides flat-earth GPS ↔ local-meters conversion (accurate within ~10 km of origin):
+The `geo_utils.h` header provides functions to convert between GPS coordinates and local Cartesian coordinates (meters) relative to a specified origin point. This is useful for implementing your planner in a local coordinate frame while still accepting GPS input and producing GPS output. 
+
+Using GeographicLib under the hood, these functions handle the necessary geodesic calculations for accurate conversions.
 
 ```cpp
 // Convert GPS → local meters (relative to origin)
