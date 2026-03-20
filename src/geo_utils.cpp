@@ -1,27 +1,26 @@
 #include "PlannerTemplate/geo_utils.h"
 
-#include <cmath>
+#include <GeographicLib/LocalCartesian.hpp>
 
 namespace planner_template {
 
-static constexpr double METERS_IN_DEGREE = 111319.5;
-
 LocalPoint gps_to_local(GpsPoint p, GpsPoint origin) {
-  const double meters_in_lon_degree =
-      std::cos((origin.latitude / 180.0) * M_PI) * METERS_IN_DEGREE;
+  GeographicLib::LocalCartesian proj(origin.latitude, origin.longitude, 0.0);
 
-  return {
-      (p.longitude - origin.longitude) * meters_in_lon_degree,
-      (p.latitude - origin.latitude) * METERS_IN_DEGREE};
+  double x, y, z;
+  proj.Forward(p.latitude, p.longitude, 0.0, x, y, z);
+
+  // LocalCartesian returns (x=East, y=North, z=Up)
+  return {x, y};
 }
 
 GpsPoint local_to_gps(LocalPoint p, GpsPoint origin) {
-  const double meters_in_lon_degree =
-      std::cos((origin.latitude / 180.0) * M_PI) * METERS_IN_DEGREE;
+  GeographicLib::LocalCartesian proj(origin.latitude, origin.longitude, 0.0);
 
-  return {
-      origin.latitude + p.y / METERS_IN_DEGREE,
-      origin.longitude + p.x / meters_in_lon_degree};
+  double lat, lon, h;
+  proj.Reverse(p.x, p.y, 0.0, lat, lon, h);
+
+  return {lat, lon};
 }
 
 }  // namespace planner_template
