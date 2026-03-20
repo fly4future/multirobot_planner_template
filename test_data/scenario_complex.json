@@ -1,0 +1,60 @@
+{
+  "robots": [
+    {
+      "name": "uav1",
+      "latitude": 47.3770,
+      "longitude": 8.5400,
+      "altitude": 0.0,
+      "heading": 0.0,
+      "battery_remaining": 0.92
+    },
+    {
+      "name": "uav2",
+      "latitude": 47.3772,
+      "longitude": 8.5405,
+      "altitude": 0.0,
+      "heading": 45.0,
+      "battery_remaining": 0.85
+    },
+    {
+      "name": "uav3",
+      "latitude": 47.3768,
+      "longitude": 8.5410,
+      "altitude": 0.0,
+      "heading": 270.0,
+      "battery_remaining": 0.78
+    }
+  ],
+  "search_area": [
+    { "latitude": 47.3765, "longitude": 8.5395 },
+    { "latitude": 47.3760, "longitude": 8.5415 },
+    { "latitude": 47.3770, "longitude": 8.5425 },
+    { "latitude": 47.3780, "longitude": 8.5420 },
+    { "latitude": 47.3778, "longitude": 8.5400 }
+  ],
+  "no_fly_zones": [
+    {
+      "name": "tower",
+      "vertices": [
+        { "latitude": 47.3769, "longitude": 8.5407 },
+        { "latitude": 47.3769, "longitude": 8.5412 },
+        { "latitude": 47.3772, "longitude": 8.5412 },
+        { "latitude": 47.3772, "longitude": 8.5407 }
+      ]
+    },
+    {
+      "name": "restricted_area",
+      "vertices": [
+        { "latitude": 47.3763, "longitude": 8.5400 },
+        { "latitude": 47.3763, "longitude": 8.5408 },
+        { "latitude": 47.3766, "longitude": 8.5408 },
+        { "latitude": 47.3766, "longitude": 8.5400 }
+      ]
+    }
+  ],
+  "flight_height": 25.0,
+  "config": {
+    "sweep_step_m": 15.0,
+    "overlap_percent": 10
+  }
+}

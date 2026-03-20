@@ -1,0 +1,38 @@
+{
+  "robots": [
+    {
+      "name": "uav1",
+      "latitude": 47.3977,
+      "longitude": 8.5456,
+      "altitude": 0.0,
+      "heading": 0.0,
+      "battery_remaining": 0.95
+    },
+    {
+      "name": "uav2",
+      "latitude": 47.3978,
+      "longitude": 8.5458,
+      "altitude": 0.0,
+      "heading": 90.0,
+      "battery_remaining": 0.88
+    }
+  ],
+  "search_area": [
+    { "latitude": 47.3975, "longitude": 8.5450 },
+    { "latitude": 47.3975, "longitude": 8.5470 },
+    { "latitude": 47.3985, "longitude": 8.5470 },
+    { "latitude": 47.3985, "longitude": 8.5450 }
+  ],
+  "no_fly_zones": [
+    {
+      "name": "building_A",
+      "vertices": [
+        { "latitude": 47.3979, "longitude": 8.5458 },
+        { "latitude": 47.3979, "longitude": 8.5463 },
+        { "latitude": 47.3982, "longitude": 8.5463 },
+        { "latitude": 47.3982, "longitude": 8.5458 }
+      ]
+    }
+  ],
+  "flight_height": 30.0
+}
