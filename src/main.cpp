@@ -1,16 +1,38 @@
 #include <fstream>
+#include <functional>
 #include <iomanip>
 #include <iostream>
+#include <map>
+#include <memory>
 #include <string>
 
 #include <nlohmann/json.hpp>
 
 #include "PlannerTemplate/logger.h"
+#include "PlannerTemplate/planner_interface.h"
 #include "PlannerTemplate/types.h"
+
+// ── Planner includes ────────────────────────────────────────────────────────
 #include "example_planner.h"
+#include "my_planner.h"
+// Add your planner header here
 
 using json = nlohmann::json;
 using namespace planner_template;
+
+// ── Planner registry ────────────────────────────────────────────────────────
+// To register a new planner, add an entry mapping its name to a factory lambda.
+using PlannerFactory = std::function<std::unique_ptr<PlannerInterface>()>;
+
+static const std::map<std::string, PlannerFactory> PLANNERS = {
+    {"example",    [] { return std::make_unique<ExamplePlanner>(); }},
+    {"my_planner", [] { return std::make_unique<MyPlanner>(); }},
+    // {"your_planner", [] { return std::make_unique<YourPlanner>(); }},
+};
+
+static constexpr const char* DEFAULT_PLANNER = "example";
+
+// ── JSON parsing helpers ────────────────────────────────────────────────────
 
 static PlannerInput parse_scenario(const std::string& path) {
   std::ifstream ifs(path);
@@ -118,32 +140,57 @@ static json output_to_json(const PlannerInput& input, const PlannerOutput& outpu
   return j;
 }
 
+// ── Main ────────────────────────────────────────────────────────────────────
+
 int main(int argc, char** argv) {
   if (argc < 2) {
-    std::cerr << "Usage: " << argv[0] << " <scenario.json> [--output results.json]\n";
+    std::cerr << "Usage: " << argv[0]
+              << " <scenario.json> [--planner name] [--output results.json]\n";
+    std::cerr << "\nAvailable planners: ";
+    for (const auto& [name, _] : PLANNERS) {
+      std::cerr << name << " ";
+    }
+    std::cerr << "(default: " << DEFAULT_PLANNER << ")\n";
     return 1;
   }
 
-  // Parse optional --output flag
-  std::string output_path;
+  // Parse arguments
   std::string scenario_path = argv[1];
+  std::string planner_name = DEFAULT_PLANNER;
+  std::string output_path;
+
   for (int i = 2; i < argc; ++i) {
-    if (std::string(argv[i]) == "--output" && i + 1 < argc) {
+    std::string arg = argv[i];
+    if (arg == "--planner" && i + 1 < argc) {
+      planner_name = argv[++i];
+    } else if (arg == "--output" && i + 1 < argc) {
       output_path = argv[++i];
     }
   }
 
   try {
+    // Look up planner
+    auto it = PLANNERS.find(planner_name);
+    if (it == PLANNERS.end()) {
+      std::cerr << "Error: unknown planner '" << planner_name << "'\n";
+      std::cerr << "Available planners: ";
+      for (const auto& [name, _] : PLANNERS) {
+        std::cerr << name << " ";
+      }
+      std::cerr << "\n";
+      return 1;
+    }
+
     auto input = parse_scenario(scenario_path);
 
     auto logger = std::make_shared<StdoutLogger>();
-    ExamplePlanner planner;
-    planner.initialize(logger);
+    auto planner = it->second();
+    planner->initialize(logger);
 
-    auto output = planner.plan(input);
+    auto output = planner->plan(input);
 
     // Print output
-    std::cout << "\n=== Result ===\n";
+    std::cout << "\n=== Result (" << planner_name << ") ===\n";
     std::cout << "Success: " << (output.success ? "true" : "false") << "\n";
     std::cout << "Message: " << output.message << "\n\n";
 

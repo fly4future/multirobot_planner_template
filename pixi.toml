@@ -1,0 +1,32 @@
+[workspace]
+authors = ["Marlon Rivera <marlonriv90@gmail.com>"]
+channels = ["conda-forge"]
+name = "multirobot-planner-template"
+description = "Standalone C++17 dev kit for multi-robot search/coverage planning"
+platforms = ["linux-64", "osx-arm64", "osx-64", "win-64"]
+version = "0.1.0"
+
+[dependencies]
+cxx-compiler = ">=1.5"
+cmake = ">=3.14"
+ninja = ">=1.11"
+geographiclib-cpp = ">=2.0"
+python = ">=3.10"
+matplotlib = ">=3.7"
+
+[tasks]
+configure = "cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release"
+build = { cmd = "cmake --build build", depends-on = ["configure"] }
+clean = "rm -rf build"
+
+# Run example planner on a scenario
+demo-simple = { cmd = "build/planner_demo test_data/scenario_simple.json --output build/result.json", depends-on = ["build"] }
+demo-complex = { cmd = "build/planner_demo test_data/scenario_complex.json --output build/result.json", depends-on = ["build"] }
+
+# Run your planner on a scenario
+plan-simple = { cmd = "build/planner_demo test_data/scenario_simple.json --planner my_planner --output build/result.json", depends-on = ["build"] }
+plan-complex = { cmd = "build/planner_demo test_data/scenario_complex.json --planner my_planner --output build/result.json", depends-on = ["build"] }
+
+# Visualize last result
+viz = { cmd = "python tools/visualize.py build/result.json --save build/plan.png" }
+show = { cmd = "python tools/visualize.py build/result.json" }

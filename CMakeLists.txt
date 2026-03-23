@@ -4,25 +4,32 @@ project(PlannerTemplate LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# ── GeographicLib (fetched automatically) ────────────────────────────────────
-include(FetchContent)
-FetchContent_Declare(
-  GeographicLib
-  GIT_REPOSITORY https://github.com/geographiclib/geographiclib.git
-  GIT_TAG        v2.7
-)
-# Only build the library, not tools/tests/examples
-set(BUILD_BOTH_LIBS OFF CACHE BOOL "" FORCE)
-set(BUILD_DOCUMENTATION OFF CACHE BOOL "" FORCE)
-set(GEOGRAPHICLIB_PRECISION 2 CACHE STRING "" FORCE)
-set(BUILD_TOOLS OFF CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(GeographicLib)
+# ── GeographicLib ────────────────────────────────────────────────────────────
+# Try system/pixi-installed package first, fall back to FetchContent
+find_package(GeographicLib QUIET)
+if(NOT GeographicLib_FOUND)
+  message(STATUS "GeographicLib not found locally, fetching from GitHub...")
+  include(FetchContent)
+  FetchContent_Declare(
+    GeographicLib
+    GIT_REPOSITORY https://github.com/geographiclib/geographiclib.git
+    GIT_TAG        v2.7
+  )
+  set(BUILD_BOTH_LIBS OFF CACHE BOOL "" FORCE)
+  set(BUILD_DOCUMENTATION OFF CACHE BOOL "" FORCE)
+  set(GEOGRAPHICLIB_PRECISION 2 CACHE STRING "" FORCE)
+  set(BUILD_TOOLS OFF CACHE BOOL "" FORCE)
+  FetchContent_MakeAvailable(GeographicLib)
+else()
+  message(STATUS "Found GeographicLib: ${GeographicLib_VERSION}")
+endif()
 
 # ── Library ──────────────────────────────────────────────────────────────────
 add_library(PlannerTemplateLib SHARED
   src/geo_utils.cpp
   src/logger.cpp
   src/example_planner.cpp
+  src/my_planner.cpp
 )
 
 target_include_directories(PlannerTemplateLib

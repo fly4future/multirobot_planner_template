@@ -1,0 +1,6 @@
+# Build output
+build/
+
+# Pixi environments
+.pixi/*
+!.pixi/config.toml
