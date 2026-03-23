@@ -122,7 +122,9 @@ public:
 
 ## Input/Output Types
 
-> **Altitude convention:** All altitude values are in meters Above Ground Level (AGL).
+> **Conventions:**
+> - **Altitude:** meters Above Ground Level (AGL)
+> - **Heading:** radians, 0 = East, counter-clockwise (π/2 = North, π = West)
 
 ### Input (`PlannerInput`)
 
@@ -141,7 +143,7 @@ public:
 | `name`              | `string`   | Robot identifier               |
 | `position`          | `GpsPoint` | Current GPS position           |
 | `altitude`          | `double`   | Current height above ground (m AGL) |
-| `heading`           | `double`   | Current heading (deg, 0=N, clockwise) |
+| `heading`           | `double`   | Current heading (rad, 0=E, CCW) |
 | `battery_remaining` | `double`   | Battery fraction (0.0–1.0)     |
 
 ### No-Fly Zone (`NoFlyZone`)
@@ -159,7 +161,7 @@ public:
 | `message` | `string`             | Status or error description    |
 | `paths`   | `vector<RobotPath>`  | One path per robot             |
 
-Each `Waypoint` has: `latitude`, `longitude`, `altitude` (m AGL), `heading` (deg).
+Each `Waypoint` has: `latitude`, `longitude`, `altitude` (m AGL), `heading` (rad, 0=E, CCW).
 
 ## GPS Utilities
 

@@ -6,9 +6,11 @@
 namespace planner_template {
 
 // ---------------------------------------------------------------------------
-// Altitude convention: ALL altitude values in this API are in meters
-// Above Ground Level (AGL). The flight controller handles the conversion
-// to Above Mean Sea Level (AMSL) internally at runtime.
+// Conventions:
+//   Altitude: ALL altitude values are in meters Above Ground Level (AGL).
+//             The flight controller handles AMSL conversion at runtime.
+//   Heading:  ALL heading values are in radians, 0 = East, counter-clockwise.
+//             (i.e. π/2 = North, π = West, 3π/2 = South)
 // ---------------------------------------------------------------------------
 
 /// GPS coordinate (WGS84)
@@ -28,7 +30,7 @@ struct Waypoint {
   double latitude  = 0.0;
   double longitude = 0.0;
   double altitude  = 0.0;  // meters AGL — height above ground at this waypoint
-  double heading   = 0.0;  // degrees, 0=North, clockwise
+  double heading   = 0.0;  // radians, 0=East, counter-clockwise
 };
 
 /// Robot state information
@@ -36,7 +38,7 @@ struct RobotInfo {
   std::string name;
   GpsPoint    position;
   double      altitude          = 0.0;  // meters AGL — current height above ground
-  double      heading           = 0.0;  // degrees, 0=North, clockwise
+  double      heading           = 0.0;  // radians, 0=East, counter-clockwise
   double      battery_remaining = 1.0;  // fraction 0.0–1.0
 };
 
