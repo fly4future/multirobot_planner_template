@@ -197,6 +197,35 @@ The plot shows:
 - **Stars** — robot start positions
 - **Colored lines** — planned paths per robot (square = start, triangle = end)
 
+## Adding Dependencies
+
+If your planner needs additional libraries (e.g. Eigen, CGAL, Boost):
+
+### With Pixi
+
+```bash
+# Search for a package on conda-forge
+pixi search eigen
+
+# Add a C++ library
+pixi add eigen
+
+# Add a Python package
+pixi add --pypi scipy
+```
+
+Then in `CMakeLists.txt`:
+```cmake
+find_package(Eigen3 REQUIRED)
+target_link_libraries(PlannerTemplateLib PRIVATE Eigen3::Eigen)
+```
+
+### Without Pixi
+
+- **System install:** `apt install libeigen3-dev` (Linux) or `brew install eigen` (macOS), then `find_package()` in CMake
+- **FetchContent:** pull from GitHub at configure time (same pattern as our GeographicLib fallback)
+- **Header-only:** drop headers into `third_party/` and add to `target_include_directories`
+
 ## Test Scenarios
 
 - **`scenario_simple.json`** — 2 robots, rectangular search area (~150m × 110m), 1 no-fly zone (building)
